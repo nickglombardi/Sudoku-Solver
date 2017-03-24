@@ -1,0 +1,70 @@
+.data
+
+takString:  .asciiz "tak: "
+isSolutionString: .asciiz "isSolution: "
+candidates: 		.byte 0:9
+byteArray: .byte 0,0,3,0,2,0,6,0,0,9,0,0,3,0,5,0,0,1,0,0,1,8,0,6,4,0,0,0,0,8,1,0,2,9,0,0,7,0,0,0,0,0,0,0,8,0,0,6,7,0,8,2,0,0,0,0,2,6,0,9,5,0,0,8,0,0,2,0,3,0,0,9,0,0,5,0,1,0,3,0,0
+# Constants
+.eqv QUIT 10
+.eqv PRINT_STRING 4
+.eqv PRINT_INT 1
+.eqv NULL 0x0
+
+.macro print_string(%address)
+	li $v0, PRINT_STRING
+	la $a0, %address
+	syscall 
+.end_macro
+
+.macro print_string_reg(%reg)
+	li $v0, PRINT_STRING
+	la $a0, 0(%reg)
+	syscall 
+.end_macro
+
+.macro print_newline
+	li $v0, 11
+	li $a0, '\n'
+	syscall 
+.end_macro
+
+.macro print_space
+	li $v0, 11
+	li $a0, ' '
+	syscall 
+.end_macro
+
+.macro print_int(%register)
+	li $v0, 1
+	add $a0, $zero, %register
+	syscall
+.end_macro
+
+.macro print_char_addr(%address)
+	li $v0, 11
+	lb $a0, %address
+	syscall
+.end_macro
+
+.macro print_char_reg(%reg)
+	li $v0, 11
+	move $a0, %reg
+	syscall
+.end_macro
+
+.text
+.globl main
+
+main:
+	
+	la $a0, byteArray
+	li $a1, 0
+	li $a2, -1
+	la $a3, candidates
+	jal sudoku
+
+li $v0, 10
+syscall
+
+
+.include "hw4.asm"
